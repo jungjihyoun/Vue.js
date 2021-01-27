@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    {{ num }}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        num: 10
+      },
+      computed: {
+        doubleNum: function() {
+          return this.num * 2;
+        }
+      },
+      watch: {
+        num: function(newValue, oldValue) {
+          this.fetchUserByNumber(newValue);
+        }
+      },
+      methods: {
+        fetchUserByNumber: function(num) {
+          // console.log(num);
+          axios.get(num);
+        }
+      }
+    });
+        // computed -> 데이터 의존 , 기준이 되는 값이 data이다. 빠른 계산이 장점
+        //             주로 valid값이나 계산할 때 사용
+        // watch -> 데이터 변화를 감지 , 무거운 로직들(매번 실행되는게 부담스러운)
+        //          특히 데이터 요청에 적합 (axios.get...)
+    </script>
+</body>
+</html>
