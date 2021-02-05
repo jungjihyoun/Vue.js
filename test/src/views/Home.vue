@@ -1,6 +1,5 @@
 <template>
   <div>
-
       <!-- data를 바인딩 한다 : v-model -->
       <!-- 이벤트를 건다 : @ -->
       <!-- 다중 데이터 핸들링 : v-for -->
@@ -70,6 +69,8 @@ export default {
         });
      },
  },
+
+ 
   beforeCreate() {
     console.log("beforeCreate");
   },
