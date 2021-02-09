@@ -18,7 +18,6 @@ const routes = [{
   name: 'ProductCreate',
   component: ProductCreate
 },
-
 ]
 
 const router = createRouter({

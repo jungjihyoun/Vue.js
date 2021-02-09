@@ -235,5 +235,21 @@
   </div>
 </template>
 
+<script>
+
+export default{
+    created(){
+        this.getProductList();
+    },
+    methods: {
+        async getProductList(){
+            let productList = await this.$api("/api/productList",{});
+            console.log(productList);
+        }
+    }
+}
+
+</script>
+
 
 
