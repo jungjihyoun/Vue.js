@@ -5,8 +5,8 @@ const session = require('express-session');
 const fs = require('fs');
 
 app.use(session({
-    secret: 'secret code',
-    resave: false,
+    secret: 'secret code',   
+    resave: false,   //request 요청 왔을 때 세션에 수정사항 없으면 저장 안함
     saveUninitialized: false,
     cookie: {
         secure: false,
@@ -18,6 +18,8 @@ app.use(express.json({
     limit: '50mb'
 }));
 
+
+//server start            port
 const server = app.listen(3000, () => {
     console.log('Server started. port 3000.');
 });
@@ -31,11 +33,11 @@ fs.watchFile(__dirname + '/sql.js', (curr, prev) => {
 });
 
 const db = {
-    database: "d_store",
-    connectionLimit: 10,
-    host: "192.168.219.100",
+    database: "dev_class",
+    connectionLimit: 1000,
+    host: "127.0.0.1",
     user: "root",
-    password: "wlgus8402~"
+    password: "wlgus8402"
 };
 
 const dbPool = require('mysql').createPool(db);
@@ -59,6 +61,7 @@ app.post('/api/login', async (request, res) => {
         });
     }
 });
+
 
 app.post('/api/logout', async (request, res) => {
     request.session.destroy();
@@ -109,6 +112,7 @@ app.get('/download/:productId/:fileName', (request, res) => {
     });
     else fs.createReadStream(filepath).pipe(res);
 });
+
 
 app.post('/apirole/:alias', async (request, res) => {
     if (!request.session.email) {
