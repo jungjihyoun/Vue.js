@@ -26,10 +26,11 @@ const server = app.listen(3000, () => {
 
 let sql = require('./sql.js');
 
+// restart 없이  현재 app.js가 실행되고 있는 dir의 과거와 현재를 비교하여 
 fs.watchFile(__dirname + '/sql.js', (curr, prev) => {
     console.log('sql 변경시 재시작 없이 반영되도록 함.');
-    delete require.cache[require.resolve('./sql.js')];
-    sql = require('./sql.js');
+    delete require.cache[require.resolve('./sql.js')];   //기존의 cache에 있던 sql 
+    sql = require('./sql.js'); 
 });
 
 const db = {

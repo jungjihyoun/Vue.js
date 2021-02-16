@@ -9,4 +9,3 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 
 createApp(App).use(router).mixin(mixins).mount('#app')
-
