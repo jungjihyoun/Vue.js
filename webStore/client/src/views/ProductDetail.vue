@@ -35,17 +35,16 @@
                     <div class="card shadow-sm">
 
                         <div class="card-body">
-                            <h5 class="card-title"> Baby Apeach </h5>
-                            <h5 class="card-title pt-3 pb-3 border-top"> <del>52,000 won</del><strong><mark>48,000 won</mark></strong></h5>
+                            <h5 class="card-title"> {{productDetail.product_name}} </h5>
+                            <h5 class="card-title pt-3 pb-3 border-top"> {{getCurrencyFormat(productDetail.product_price)}} won </h5>
                             <p class="card-text border-top pt-3 ">
-                                <span class="badge bg-danger">Hot</span>
-                                <span class="badge bg-primary">Sale</span>
+                                <span class="badge bg-danger me-1">Hot</span>
+                                <span class="badge bg-primary me-1">Sale</span>
                             </p>
                             <!-- 배송 설명 -->
                             <p class="card-text pb-3">
-                                shipping charge 2,500 won | parcel (delivery) service | no charge for more than 50,000
-                                won
-                            </p>
+                                shipping charge {{getCurrencyFormat(productDetail.delivery_price)}} won | parcel (delivery) service | 
+                                additional price {{getCurrencyFormat(productDetail.add_delivery_price)}}won for some region | outbound days : until {{productDetail.outbound_days}} days</p>
                             <!-- 총 수량 -->
                             <div class="card-text  border-top pb-3">
                             <div class="row">
@@ -54,9 +53,9 @@
                                 </div>
                                 <div class="col-auto">
                                     <div class="input-group">
-                                        <span class="input-group-text">-</span>
-                                        <input type="text" class="form-control" style="width:40px;" value="1">
-                                        <span class="input-group-text">+</span>
+                                        <span class="input-group-text" style="cursor:pointer;" @click="calculatePrice(-1);">-</span>
+                                        <input type="text" class="form-control" style="width:40px;" v-model="total">
+                                        <span class="input-group-text" style="cursor:pointer;" @click="calculatePrice(1);">+</span>
                                     </div>
 
                                 </div>
@@ -65,10 +64,10 @@
                             <!-- 총 가격 -->
                             <div class="row pt-3 pb-3 border-top">
                                 <div class="col-6">
-                                    <h3> COST </h3>
+                                    <h3> ALL COST </h3>
                                 </div>
                                 <div class="col-6" style="text-align: right;">
-                                    <h3>48,000 won</h3>
+                                    <h3>{{getCurrencyFormat(totalPrice)}}won</h3>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-item-center">
@@ -89,39 +88,51 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <img src="img/1/detail1.png"
+                    <img :src="productDetail.path"
                         class="img-fluid" />
                 </div>
             </div>
         </div>
     </main>
 </template>
-
 <script>
-export default{
-    data(){
-        return {
-            productID: 0,
-            productDetail: {},
-            productImage: [],
-        }
+export default {
+  data() {
+    return {
+      productId: 0,
+      productDetail: {},
+      productImage: [],
+      total: 1,
+      totalPrice: 0
+    };
+  },
+  created() {
+    this.productId = this.$route.query.product_id;
+    this.getProductDetail();
+    this.getProductImage();
+  },
+  methods: {
+    calculatePrice(cnt) {
+      let total = this.total + cnt;
+      if(total < 1) total = 1;
+      this.total = total;
+      this.totalPrice = this.productDetail.product_price * this.total;
     },
-    created(){
-        this.productId = this.$route.query.product_id;
-        this.getProductDetail();
-        this.getProductImage();
+    getCurrencyFormat(value) {
+      return this.$currencyFormat(value);
     },
-    methods: {
-        async getProductDetail(){                 //mixin url
-            this.productDetail = await this.$api("/api/productDetail",{param:[this.productID]});
-            console.log(this.productDetail);
-        },
-        async getProductImage(){
-          this.productImgae = await this.$api("/api/productMainImages", {param:[this.productId]});
-          console.log("imageList",this.productImage)
-        }
-    
+    async getProductDetail() {
+      let productDetail = await this.$api("/api/productDetail",{param:[this.productId]});
+      if(productDetail.length > 0) {
+        this.productDetail = productDetail[0];
+        this.totalPrice = this.totalPrice = this.productDetail.product_price * this.total;
+      }
+      console.log(this.productDetail);
+    },
+    async getProductImage() {
+      this.productImage = await this.$api("/api/productMainImages",{param:[this.productId]});
+      console.log('this.productImage',this.productImage)
     }
+  }
 }
-
 </script>
