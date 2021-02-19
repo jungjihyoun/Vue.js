@@ -14,7 +14,7 @@ const store = createStore({
       state.user = data;
     }
   },
-  //새로고침시 user 날라가지 않음 
+  //새로고침시 user state 날라가지 않음 
   plugins: [
     persistedstate({
       paths: ['user']

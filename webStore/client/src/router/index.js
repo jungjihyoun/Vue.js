@@ -3,6 +3,8 @@ import ProductList from '../views/ProductList.vue'
 import ProductDetail from '../views/ProductDetail.vue'
 import ProductCreate from '../views/ProductCreate.vue'
 import SalesList from '../views/SalesList.vue'
+import ImageInsert from '../views/ImageInsert.vue'
+import ProductUpdate from '../views/ProductUpdate.vue'
 
 const routes = [{
   path: '/',
@@ -23,6 +25,16 @@ const routes = [{
   path: '/sales',
   name: 'SalesList',
   component: SalesList
+},
+{
+  path: '/image_insert',
+  name: 'ImageInsert',
+  component: ImageInsert,
+},
+{
+  path: '/update',
+  name: 'ProductUpdate',
+  component: ProductUpdate,
 },
 ]
 

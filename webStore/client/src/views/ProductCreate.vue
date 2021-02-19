@@ -197,5 +197,10 @@ export default {
       this.$router.push({ path: "/" });
     }
   },
+  methods: {
+    goTolList() {
+      this.$router.push({ path: "/sales" });
+    },
+  },
 };
 </script>
