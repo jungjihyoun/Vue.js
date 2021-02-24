@@ -6,7 +6,7 @@
         <div class="mb-3 row">
           <label class="col-md-3 col-form-label">제품명</label>
           <div class="col-md-9">
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" v-model="product.product_name"/>
           </div>
         </div>
 
@@ -19,6 +19,7 @@
                   type="num"
                   class="form-control"
                   aria-label="Dollar amount (with dot and two decimal places)"
+                  v-model = "product.product_price"
                 />
                 <span class="input-group-text">Won</span>
               </div>
@@ -35,6 +36,7 @@
                   type="num"
                   class="form-control"
                   aria-label="Dollar amount (with dot and two decimal places)"
+                  v-model = "product.delivery_price"
                 />
                 <span class="input-group-text">Won</span>
               </div>
@@ -51,6 +53,7 @@
                   type="num"
                   class="form-control"
                   aria-label="Dollar amount (with dot and two decimal places)"
+                  v-model = "product.add_delivery_price"
                 />
                 <span class="input-group-text">Won</span>
               </div>
@@ -67,6 +70,7 @@
                   type="num"
                   class="form-control"
                   aria-label="Dollar amount (with dot and two decimal places)"
+                  v-model = "product.outbound_days"
                 />
                 <span class="input-group-text">일 이내 출고</span>
               </div>
@@ -78,19 +82,19 @@
           <label class="col-md-3 col-form-label">제품카테고리</label>
           <div class="col-md-9">
             <div class="row">
-              <div class="col-auto">
-                <select class="form-select">
-                  <option>카카오</option>
+              <div class="col-auto">    
+                <select class="form-select" v-model="cate1" @change="changeCategory1">
+                  <option :value="cate" :key=i v-for="(cate,i) in category1">{{cate}}</option>
                 </select>
               </div>
               <div class="col-auto">
-                <select class="form-select">
-                  <option>곰돌이</option>
+                <select class="form-select"  v-model="cate2" @change="changeCategory2">
+                  <option :value="cate" :key=i v-for="(cate,i) in category2">{{cate}}</option>
                 </select>
               </div>
               <div class="col-auto">
-                <select class="form-select">
-                  <option>인형</option>
+                <select class="form-select"  v-model="cate3">
+                  <option  :value="cate" :key=i v-for="(cate,i) in category3">{{cate}}</option>
                 </select>
               </div>
             </div>
@@ -107,74 +111,21 @@
                   type="num"
                   class="form-control"
                   aria-label="Dollar amount (with dot and two decimal places)"
+                  v-model = "product.tags"
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div class="mb-3 row">
-          <label class="col-md-3 col-form-label">썸네일 이미지</label>
-          <div class="col-md-9">
-            <input
-              class="form-control"
-              type="file"
-              accept="image/png, image/jpg"
-            />
-            <div class="alert alert-secondary" role="alert">
-              <ul>
-                <li>이미지 사이즈 : 350 * 350</li>
-                <li>파일 사이즈 : 1M 이하</li>
-                <li>파일 확장자 : png,jpg만 가능</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-3 row">
-          <label class="col-md-3 col-form-label">제품 이미지</label>
-          <div class="col-md-9">
-            <input
-              class="form-control"
-              type="file"
-              accept="image/png, image/jpg"
-              multiple
-            />
-            <div class="alert alert-secondary" role="alert">
-              <ul>
-                <li>최대 5개 가능</li>
-                <li>이미지 사이즈 : 700 * 700</li>
-                <li>파일 사이즈 : 1M 이하</li>
-                <li>파일 확장자 : png,jpg만 가능</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-3 row">
-          <label class="col-md-3 col-form-label">제품 설명 이미지</label>
-          <div class="col-md-9">
-            <input
-              class="form-control"
-              type="file"
-              accept="image/png, image/jpg"
-              multiple
-            />
-            <div class="alert alert-secondary" role="alert">
-              <ul>
-                <li>파일 사이즈 : 5M 이하</li>
-                <li>파일 확장자 : png,jpg만 가능</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+   
 
         <div class="mb-3 row">
           <div class="col-6 d-grid p-1">
-            <button type="button" class="btn btn-lg btn-dark">취소하기</button>
+            <button type="button" class="btn btn-lg btn-dark" @click="goToList">취소하기</button>
           </div>
           <div class="col-6 d-grid p-1">
-            <button type="button" class="btn btn-lg btn-danger">
+            <button type="button" class="btn btn-lg btn-danger" @click="productInsert">
               저장하기
             </button>
           </div>
@@ -186,10 +137,34 @@
 
 <script>
 export default {
+  data() {
+    return{
+      product: {
+         product_name: "",
+         product_price: 0,
+         delivery_price: 0,
+         add_delivery_price: 0,
+         tags: "",
+         outbound_days: 0,
+         category_id : 1,
+         seller_id: 1
+      },
+      category1: [],
+      category2: [],
+      category3: [],
+      categoryList: [],
+      cate1: "",
+      cate2: "",
+      cate3: "",
+    }
+  },
   computed: {
     user() {
       return this.$store.state.user;
     },
+  },
+  created() {
+    this.getCategoryList();
   },
   mounted() {
     if (this.user.email == undefined) {
@@ -197,10 +172,113 @@ export default {
       this.$router.push({ path: "/" });
     }
   },
+
+  
   methods: {
-    goTolList() {
+    goToList() {
       this.$router.push({ path: "/sales" });
     },
+
+  async getCategoryList(){
+      let categoryList = await this.$api("/api/categoryList",{});
+      this.categoryList = categoryList;
+      
+      let oCategory = {};
+      categoryList.forEach(item => {
+        oCategory[item.category1] = item.id;
+      });
+      let category1 = [];
+      for(let key in oCategory) {
+        category1.push(key);
+      }
+      this.category1 = category1;
+
+      let category2 = [];
+      category2 = categoryList.filter(c => {
+        return c.category1 == category1[0];
+      });
+      let oCategory2 = {};
+      category2.forEach(item => {
+        oCategory2[item.category2] = item.id;
+      });
+      category2 = [];
+      for(let key in oCategory2) {
+        category2.push(key);
+      }
+      this.category2 = category2;
+      // console.log(category2);
+    },
+
+    changeCategory1(){
+      // this.cate1
+      // 함수가 호출될 때, 무조건 category3을 초기화 시켜준다 
+      this.category3 = [];
+
+
+      let categoryList = this.categoryList.filter(c => {
+        return c.category1 == this.cate1;
+      });
+      let oCategory2 = {};
+      categoryList.forEach(item => {
+        oCategory2[item.category2] = item.id;
+      });
+      let category2 = [];
+      for(let key in oCategory2) {
+        category2.push(key);
+      }
+      this.category2 = category2;
+    },
+
+    changeCategory2(){
+      let categoryList = this.categoryList.filter(c => {
+        return (c.category1 == this.cate1 && c.category2 == this.cate2);
+      });
+      let oCategory3 = {};
+      categoryList.forEach(item => {
+        oCategory3[item.category3] = item.id;
+      });
+      let category3 = [];
+      for(let key in oCategory3) {
+        category3.push(key);
+      }
+      this.category3 = category3;
+    },
+
+    productInsert() {
+        //필수 값 체크
+        if( this.product.product_name == ""){
+          return this.$swal("제품명은 필수 입력값입니다. ");
+        }
+        if( this.product.product_price == ""  || this.product.product_price == 0){
+          return this.$swal("제품가격을 입력하세요.");
+        }
+        if (this.product.outbound_days == "" || this.product.outbound_days == 0){
+          return this.$swal("출고일을 입력하세요 ");
+        }
+
+        this.product.category_id = this.categoryList.filter(c => {
+          return (c.category1 == this.cate1 && c.category2 == this.cate2 && c.category3 == this.cate3);
+        })[0].id;
+
+        console.log(this.product.category_id);
+
+
+         this.$swal
+        .fire({
+          title: "등록 하시겠습니까?",
+          showCancelButton: true,
+          confirmButtonText: `생성 `,
+          cancelButtonText: `취소 `,
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            console.log(this.product);
+            await this.$api("/api/productInsert", { param: [this.product] });
+            this.$swal.fire("저장되었습니다!", "", "success");
+            this.$router.push({path:'/sales'});
+          }
+        });
+    }
   },
 };
 </script>

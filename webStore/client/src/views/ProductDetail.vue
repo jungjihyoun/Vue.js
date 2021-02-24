@@ -11,8 +11,8 @@
                             <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"></li>
                         </ol> 
                         <div class="carousel-inner"> 
-                           <div :class="`carousel-item ${i==0?'active':''}`" :key="i" v-for="(pimg, i) in productImage">
-                          <img :src="`/download/${productId}/${pimg.path}`" class="d-block w-100" alt="...">
+                         <div :class="`carousel-item ${i==0?'active':''}`" :key="i" v-for="(pimg, i) in productImage">
+                         <img :src="`/download/${productId}/${pimg.path}`" class="d-block w-100" alt="...">
                         </div>
                      
                         </div>
@@ -88,8 +88,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <img :src="productDetail.path"
-                        class="img-fluid" />
+                    <img :src="`/download/${productId}/${productDetail.path}`" class="img-fluid" />
                 </div>
             </div>
         </div>
@@ -136,3 +135,4 @@ export default {
   }
 }
 </script>
+

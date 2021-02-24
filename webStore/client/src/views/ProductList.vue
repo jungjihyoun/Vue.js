@@ -8,18 +8,19 @@
                 <div class="col-12">
                     <select class="form-select">
                         <option selected>Open this select menu</option>
-                        <option value="1">Bear</option>
-                        <option value="2">Lion</option>
-                        <option value="3">Pink</option>
+                        <option value="1">최신순 </option>
+                        <option value="2">판매량순</option>
+                        <option value="3">낮은 가격순</option>
+                        <option value="4">높은 가격순</option>
                     </select>
                 </div>
             </div>
 
             <!-- 제품 -->
-            <div class="row g-3">
-                <div class="col-xl-3 col-lg-4 col-md-6"  :key="i" v-for="(product,i) in productList">
+            <div class="row g-3" >
+                <div class="col-xl-3 col-lg-4 col-md-5"  :key="i" v-for="(product,i) in productList">
                     <div class="card" style="width: 18rem;">
-                        <a @click="goToDetail(product.id);" style="cursor:pointer;"><img src="product.path" class="card-img-top" alt="..."></a>
+                        <a @click="goToDetail(product.id);" style="cursor:pointer;"><img :src="`/download/${product.id}/${product.path}`" class="card-img-top" alt="..."></a>
                         <div class="card-body">
                             <h5 class="card-title"> {{product.product_name}} </h5>
                             <p class="card-text">
